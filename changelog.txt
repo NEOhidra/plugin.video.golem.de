@@ -1,4 +1,6 @@
 1.1.0 (2015-03-29)
+ADD: Category 'Wochenrückblick' (en: 'Week in Review')
+ADD: Category 'Trailer'
 UPD: improved support for Gotham, Helix and Isengard
 FIX: show seconds (Gotham)
 
