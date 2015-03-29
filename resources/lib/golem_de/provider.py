@@ -18,7 +18,8 @@ class Provider(kodion.AbstractProvider):
         kodion.AbstractProvider.__init__(self)
         self._local_map.update({'golem.all-videos': 30500,
                                 'golem.watch-later': 30107,
-                                'golem.newest-videos': 30513})
+                                'golem.newest-videos': 30513,
+                                'golem.stream_not_found': 30514})
         self._client = None
         pass
 
@@ -152,7 +153,10 @@ class Provider(kodion.AbstractProvider):
             client = self.get_client(context)
             video_url = client.get_video_stream(video_id.group('video_id'), url, quality=video_quality)
 
-            return UriItem(video_url)
+            if video_url:
+                return UriItem(video_url)
+
+            context.get_ui().show_notification(context.localize(self._local_map['golem.stream_not_found']))
         return False
 
     def get_wizard_supported_views(self):
