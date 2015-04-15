@@ -21,6 +21,7 @@ class Provider(kodion.AbstractProvider):
                                 'golem.newest-videos': 30513,
                                 'golem.stream_not_found': 30514,
                                 'golem.trailer': 30515,
+                                'golem.manufacturer-videos': 30517,
                                 'golem.week-review': 30516})
         self._client = None
         pass
@@ -291,6 +292,13 @@ class Provider(kodion.AbstractProvider):
         week_review_item.set_fanart(self.get_fanart(context))
         week_review_item.set_image(context.create_resource_path('media', 'calendar.png'))
         result.append(week_review_item)
+
+        # Herstellervideos
+        trailer_item = DirectoryItem(context.localize(self._local_map['golem.manufacturer-videos']),
+                                     context.create_uri(['browse', 'by-query', 'herstellervideo']))
+        trailer_item.set_fanart(self.get_fanart(context))
+        trailer_item.set_image(context.create_resource_path('media', 'videos.png'))
+        result.append(trailer_item)
 
         # trailer
         trailer_item = DirectoryItem(context.localize(self._local_map['golem.trailer']),
