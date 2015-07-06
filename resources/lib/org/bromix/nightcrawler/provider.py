@@ -90,6 +90,9 @@ class Provider(object):
 
         return None
 
+    def select_video_stream(self, context, video_streams, video_qualities=[]):
+        pass
+
     def get_wizard_steps(self, context):
         # can be overridden by the derived class
         return []
