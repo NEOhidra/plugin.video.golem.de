@@ -1,7 +1,6 @@
 __author__ = 'bromix'
 
-from resources.lib.kodion import runner
-from resources.lib import golem_de
+from resources.lib.org.bromix import nightcrawler
+from resources.lib.de import golem
 
-__provider__ = golem_de.Provider()
-runner.run(__provider__)
+nightcrawler.run(golem.Provider())
