@@ -82,6 +82,23 @@ class Client(nightcrawler.HttpClient):
 
         headers = {'Referer': url}
         data = self._request(download_url, headers=headers, allow_redirects=False)
-        return data.headers.get('location', '')
+        url = data.headers.get('location', '')
+        if not url:
+            return None
+
+        return {'title': quality,
+                'sort': [{'medium': 360, 'high': 720}.get(quality)],
+                'uri': url}
+
+    def get_video_streams(self, url):
+        streams = []
+        for quality in ['medium', 'high']:
+            stream = self.get_video_stream(url, quality=quality)
+            if stream:
+                streams.append(stream)
+                pass
+            pass
+
+        return streams
 
     pass
