@@ -12,6 +12,9 @@ from .. import utils
 
 
 class ErrorHandler(urllib2.HTTPDefaultErrorHandler):
+    def __init__(self):
+        pass
+
     def http_error_default(self, req, fp, code, msg, hdrs):
         infourl = urllib.addinfourl(fp, hdrs, req.get_full_url())
         infourl.status = code
@@ -20,6 +23,9 @@ class ErrorHandler(urllib2.HTTPDefaultErrorHandler):
 
 
 class NoRedirectHandler(urllib2.HTTPRedirectHandler):
+    def __init__(self):
+        pass
+
     def http_error_302(self, req, fp, code, msg, headers):
         infourl = urllib.addinfourl(fp, headers, req.get_full_url())
         infourl.status = code

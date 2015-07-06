@@ -4,10 +4,9 @@ from .api import get, post, put, options, head, delete
 
 
 class HttpClient():
-    def __init__(self):
-        self._default_header = {}
+    def __init__(self, default_header={}):
+        self._default_header = default_header
         self._verify = False
-        pass
 
     def _request(self, url, method='GET', headers=None, post_data=None, params=None, allow_redirects=True):
         if not params:

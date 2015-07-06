@@ -60,7 +60,11 @@ class Storage(object):
             self._create_table()
         pass
 
-    def _execute(self, needs_commit, query, values=[]):
+    def _execute(self, needs_commit, query, values=None):
+        if not values:
+            values = []
+            pass
+
         if not self._needs_commit and needs_commit:
             self._needs_commit = True
             self._cursor.execute('BEGIN')

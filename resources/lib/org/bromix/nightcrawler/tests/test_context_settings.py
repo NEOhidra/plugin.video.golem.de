@@ -6,6 +6,25 @@ from resources.lib.org.bromix import nightcrawler
 
 
 class TestContextSettings(unittest.TestCase):
+    def test_video_quality(self):
+        settings = nightcrawler.Context().get_settings()
+
+        settings.set_int(settings.VIDEO_QUALITY, 0)
+        self.assertEquals(settings.get_video_quality([360, 720]), 360)
+
+        settings.set_int(settings.VIDEO_QUALITY, 0)
+        self.assertEquals(settings.get_video_quality(['medium', 'high']), 'medium')
+
+        settings.set_int(settings.VIDEO_QUALITY, 1)
+        self.assertEquals(settings.get_video_quality([360, 720]), 720)
+
+        settings.set_int(settings.VIDEO_QUALITY, 1)
+        self.assertEquals(settings.get_video_quality(['medium', 'high']), 'high')
+
+        settings.set_int(settings.VIDEO_QUALITY, 2)
+        self.assertEquals(settings.get_video_quality([360, 720, 1080]), 1080)
+        pass
+
     def test_string(self):
         settings = nightcrawler.Context().get_settings()
         settings.set_string('name', 'value')

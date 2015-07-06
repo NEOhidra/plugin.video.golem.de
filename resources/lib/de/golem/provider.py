@@ -136,9 +136,9 @@ class Provider(nightcrawler.Provider):
     def _on_play(self, context, url):
         video_id = re.search(r'(?P<video_id>\d+)', url)
         if not video_id:
-            raise nightcrawler.NightcrawlerException('Video id not found')
+            raise nightcrawler.NightcrawlerException('Video id not found in url "%s"' % url)
 
-        video_quality = context.get_settings().get_video_quality({0: 360, 1: 720})
+        video_quality = context.get_settings().get_video_quality([360, 720])
         if video_quality == 720:
             video_quality = 'high'
         else:

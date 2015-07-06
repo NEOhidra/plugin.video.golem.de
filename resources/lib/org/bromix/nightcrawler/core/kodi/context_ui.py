@@ -74,7 +74,7 @@ class KodiContextUI(AbstractContextUI):
         text = self._context.localize(constants.localize.DELETE_CONTENT) % content_name
         return self.on_yes_no_input(self._context.localize(constants.localize.CONFIRM_DELETE), text)
 
-    def on_select(self, title, items=[]):
+    def on_select(self, title, items):
         _dict = {}
         _items = []
         i = 0

@@ -46,7 +46,7 @@ class MockContext(AbstractContext):
 
     def get_ui(self):
         if not self._ui:
-            self._ui = MockContextUI()
+            self._ui = MockContextUI(self)
             pass
         return self._ui
 
