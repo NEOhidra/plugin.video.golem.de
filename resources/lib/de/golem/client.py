@@ -1,3 +1,5 @@
+import re
+
 __author__ = 'bromix'
 
 from io import BytesIO
@@ -19,7 +21,7 @@ class Client(nightcrawler.HttpClient):
                                 'Accept-Language': 'en-US,en;q=0.8,de;q=0.6'}
         pass
 
-    def get_videos(self):
+    def get_videos(self, limit=None):
         xml_data = self._request(url='http://video.golem.de/feeds/golem.de_video.xml')
 
         result = {'items': []}
@@ -58,20 +60,28 @@ class Client(nightcrawler.HttpClient):
 
                 result['items'].append(video_item)
 
+                # basically for tests
+                if limit and len(result['items']) == limit:
+                    break
                 pass
             pass
 
         return result
 
-    def get_video_stream(self, video_id, url, quality='low'):
+    def get_video_stream(self, url, quality='low'):
+        video_id = re.search(r'(?P<video_id>\d+)', url)
+        if video_id:
+            video_id = video_id.group('video_id')
+            pass
+        else:
+            video_id = 'NOTFOUND'
+            pass
+
         download_url = 'http://video.golem.de/download/%s?q=%s&rd=%s&start=0&paused=0&action=init' % (
             video_id, quality, url)
 
         headers = {'Referer': url}
-        data = self._request(download_url,
-                             headers=headers,
-                             allow_redirects=False)
-        headers = data.headers
-        return headers.get('location', '')
+        data = self._request(download_url, headers=headers, allow_redirects=False)
+        return data.headers.get('location', '')
 
     pass

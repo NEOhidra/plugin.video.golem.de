@@ -138,13 +138,7 @@ class Provider(nightcrawler.Provider):
         if not video_id:
             raise nightcrawler.NightcrawlerException('Video id not found in url "%s"' % url)
 
-        video_quality = context.get_settings().get_video_quality([360, 720])
-        if video_quality == 720:
-            video_quality = 'high'
-        else:
-            video_quality = 'medium'
-            pass
-
+        video_quality = context.get_settings().get_video_quality(['medium', 'high'])
         client = self.get_client(context)
         video_url = client.get_video_stream(video_id.group('video_id'), url, quality=video_quality)
 

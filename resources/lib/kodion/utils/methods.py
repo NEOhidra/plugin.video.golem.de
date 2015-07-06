@@ -72,28 +72,3 @@ def select_stream(context, stream_data_list, quality_map_override=None):
         pass
 
     return selected_stream_data
-
-
-def strip_html_from_text(text):
-    """
-    Removes html tags
-    :param text: html text
-    :return:
-    """
-    return re.sub('<[^<]+?>', '', text)
-
-
-def print_items(items):
-    """
-    Prints the given test_items. Basically for tests
-    :param items: list of instances of base_item
-    :return:
-    """
-    if not items:
-        items = []
-        pass
-
-    for item in items:
-        print item
-        pass
-    pass
