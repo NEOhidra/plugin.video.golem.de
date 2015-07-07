@@ -93,10 +93,6 @@ class Provider(object):
     def select_video_stream(self, context, video_streams, video_qualities=[]):
         pass
 
-    def get_wizard_steps(self, context):
-        # can be overridden by the derived class
-        return []
-
     def navigate(self, context):
         self._process_addon_setup(context)
 
@@ -267,7 +263,7 @@ class Provider(object):
         """
         Can be overridden by the derived class to handle exceptions
         :param context: the current context
-        :param exception_to_handle: the caught excaption
+        :param exception_to_handle: the caught exception
         :return: None if nothing can be done. True exception can be handled, False if not. A list of items is also possible.
         """
         return None
