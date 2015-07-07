@@ -126,7 +126,6 @@ class Provider(nightcrawler.Provider):
 
     def on_search(self, context, query):
         context.set_content_type(context.CONTENT_TYPE_EPISODES)
-
         return self._get_videos(context, query=query)
 
     # ==================================
