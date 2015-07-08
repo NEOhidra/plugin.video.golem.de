@@ -90,8 +90,49 @@ class Provider(object):
 
         return None
 
-    def select_video_stream(self, context, video_streams, video_qualities=[]):
-        pass
+    def select_video_stream(self, context, video_streams, video_quality_index=[360, 720]):
+        def _sort_video_streams(_video_stream):
+            return _video_stream.get('sort', 0)
+
+        def _find_best_fit(_video_streams):
+            _video_quality = context.get_settings().get_video_quality(video_quality_index=video_quality_index)
+            _last_delta = None
+
+            _selected_video_stream = None
+            for _video_stream in _video_streams:
+                _delta = abs(_video_stream.get('video', {}).get('height', 0) - _video_quality)
+                if _selected_video_stream is None or _last_delta is None or _last_delta > _delta:
+                    _last_delta = _delta
+                    _selected_video_stream = _video_stream
+                    pass
+                pass
+
+            return _selected_video_stream
+
+        # sort stream, highest values first
+        video_streams = sorted(video_streams, key=_sort_video_streams, reverse=True)
+
+        # some debug information
+        context.log_debug('selectable streams: %d' % len(video_streams))
+        for video_stream in video_streams:
+            context.log_debug('selectable stream: %s' % video_stream)
+            pass
+
+        selected_video_stream = None
+        if context.get_settings().ask_for_video_quality() and len(video_streams) > 0:
+            items = map(lambda x: (x['title'], x), video_streams)
+            selected_video_stream = context.get_ui().on_select(context.localize(self.LOCAL_SELECT_VIDEO_QUALITY), items,
+                                                               default=None)
+            pass
+        else:
+            selected_video_stream = _find_best_fit(video_streams)
+            pass
+
+        if selected_video_stream is not None:
+            context.log_debug('selected stream: %s' % selected_video_stream)
+            pass
+
+        return selected_video_stream
 
     def navigate(self, context):
         self._process_addon_setup(context)

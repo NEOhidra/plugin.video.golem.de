@@ -68,7 +68,7 @@ class Client(nightcrawler.HttpClient):
 
         return result
 
-    def get_video_stream(self, url, quality='low'):
+    def get_video_stream(self, url, quality='high'):
         video_id = re.search(r'(?P<video_id>\d+)', url)
         if video_id:
             video_id = video_id.group('video_id')
@@ -88,6 +88,7 @@ class Client(nightcrawler.HttpClient):
 
         return {'title': quality,
                 'sort': [{'medium': 360, 'high': 720}.get(quality)],
+                'video': {'height': {'medium': 360, 'high': 720}.get(quality)},
                 'uri': url}
 
     def get_video_streams(self, url):

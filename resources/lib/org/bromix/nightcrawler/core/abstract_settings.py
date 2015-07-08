@@ -57,7 +57,7 @@ class AbstractSettings(object):
         if not isinstance(default_value, int):
             return -1
 
-        return default_value
+        return converter(int(default_value))
 
     def set_int(self, setting_id, value):
         self.set_string(setting_id, str(value))

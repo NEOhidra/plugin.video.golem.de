@@ -134,7 +134,9 @@ class Provider(nightcrawler.Provider):
     @nightcrawler.register_context_value('url', unicode, required=True)
     def on_play(self, context, url):
         video_streams = self.get_client(context).get_video_streams(url)
-        return self.select_video_stream(context, video_streams, ['medium', 'high'])
+        video_stream = self.select_video_stream(context, video_streams, [360, 720])
+        return {'type': 'uri',
+                'uri': video_stream['uri']}
 
     @nightcrawler.register_path('/browse/all/')
     def on_browse_all(self, context, ):

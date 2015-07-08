@@ -91,6 +91,8 @@ class TestProvider(unittest.TestCase):
 
         path, params = nightcrawler.utils.path.from_uri(video['uri'])
         context = nightcrawler.Context(path, params)
+        settings = context.get_settings()
+        settings.set_int(settings.VIDEO_QUALITY, 1)
         result = provider.navigate(context)
         self.assertEquals(result['type'], 'uri')
         self.assertIsNotNone(result.get('uri', None))
