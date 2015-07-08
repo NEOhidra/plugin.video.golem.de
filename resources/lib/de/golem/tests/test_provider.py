@@ -83,13 +83,15 @@ class TestProvider(unittest.TestCase):
         pass
 
     def test_on_play(self):
+        provider = golem.Provider()
+
         context = nightcrawler.Context(path='/browse/newest/')
-        result = golem.Provider().navigate(context)
+        result = provider.navigate(context)
         video = result[0]
 
         path, params = nightcrawler.utils.path.from_uri(video['uri'])
         context = nightcrawler.Context(path, params)
-        result = golem.Provider().navigate(context)
+        result = provider.navigate(context)
         self.assertEquals(result['type'], 'uri')
         self.assertIsNotNone(result.get('uri', None))
         pass

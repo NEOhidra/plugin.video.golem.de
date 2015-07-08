@@ -133,12 +133,12 @@ class Provider(nightcrawler.Provider):
 
     @nightcrawler.register_path('/play/')
     @nightcrawler.register_context_value('url', unicode, required=True)
-    def _on_play(self, context, url):
+    def on_play(self, context, url):
         video_streams = self.get_client(context).get_video_streams(url)
         return self.select_video_stream(context, video_streams, ['medium', 'high'])
 
     @nightcrawler.register_path('/browse/all/')
-    def _on_browse_all(self, context, ):
+    def on_browse_all(self, context, ):
         context.set_content_type(context.CONTENT_TYPE_EPISODES)
 
         return self._get_videos(context)
@@ -146,14 +146,14 @@ class Provider(nightcrawler.Provider):
     @nightcrawler.register_path('/browse/date/(?P<year>\d+)/(?P<month>\d+)/')
     @nightcrawler.register_path_value('year', int)
     @nightcrawler.register_path_value('month', int)
-    def _on_browse_year_month(self, context, year, month):
+    def on_browse_year_month(self, context, year, month):
         context.set_content_type(context.CONTENT_TYPE_EPISODES)
 
         return self._get_videos(context, year=year, month=month)
 
     @nightcrawler.register_path('/browse/date/(?P<year>\d+)/')
     @nightcrawler.register_path_value('year', int)
-    def _on_browse_year(self, context, year):
+    def on_browse_year(self, context, year):
         months = self._get_months(context, year)
         result = []
         for month in months:
@@ -172,7 +172,7 @@ class Provider(nightcrawler.Provider):
     @nightcrawler.register_path_value('year', int)
     @nightcrawler.register_path_value('month', int)
     @nightcrawler.register_context_value('q', unicode, alias='query', required=True)
-    def _on_filter_by_query_show_result(self, context, year, month, query):
+    def on_filter_by_query_show_result(self, context, year, month, query):
         context.set_content_type(context.CONTENT_TYPE_EPISODES)
 
         return self._get_videos(context, query=query, year=year, month=month)
