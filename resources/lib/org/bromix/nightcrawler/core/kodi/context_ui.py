@@ -74,26 +74,23 @@ class KodiContextUI(AbstractContextUI):
         text = self._context.localize(constants.localize.DELETE_CONTENT) % content_name
         return self.on_yes_no_input(self._context.localize(constants.localize.CONFIRM_DELETE), text)
 
-    def on_select(self, title, items):
+    def on_select(self, title, items, default=-1):
         _dict = {}
         _items = []
-        i = 0
-        for item in items:
+        for index, item in enumerate(items):
             if isinstance(item, tuple):
-                _dict[i] = item[1]
+                _dict[index] = item[1]
                 _items.append(item[0])
                 pass
             else:
-                _dict[i] = i
+                _dict[index] = index
                 _items.append(item)
                 pass
-
-            i += 1
             pass
 
         dialog = xbmcgui.Dialog()
         result = dialog.select(title, _items)
-        return _dict.get(result, -1)
+        return _dict.get(result, default)
 
     def show_notification(self, message, header='', image_uri='', time_milliseconds=5000):
         _header = header
