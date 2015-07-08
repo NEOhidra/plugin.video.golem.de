@@ -86,9 +86,10 @@ class Client(nightcrawler.HttpClient):
         if not url:
             return None
 
-        return {'title': quality,
-                'sort': [{'medium': 360, 'high': 720}.get(quality)],
-                'video': {'height': {'medium': 360, 'high': 720}.get(quality)},
+        quality_map = {'medium': 360, 'high': 720}
+        return {'title': '%s (%dp)' % (quality.title(), quality_map[quality]),
+                'sort': [quality_map[quality]],
+                'video': {'height': quality_map[quality]},
                 'uri': url}
 
     def get_video_streams(self, url):

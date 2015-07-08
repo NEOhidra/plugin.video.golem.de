@@ -119,7 +119,7 @@ class Provider(object):
             pass
 
         selected_video_stream = None
-        if context.get_settings().ask_for_video_quality() and len(video_streams) > 0:
+        if context.get_settings().ask_for_video_quality() and len(video_streams) > 1:
             items = map(lambda x: (x['title'], x), video_streams)
             selected_video_stream = context.get_ui().on_select(context.localize(self.LOCAL_SELECT_VIDEO_QUALITY), items,
                                                                default=None)

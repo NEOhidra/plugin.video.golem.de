@@ -135,6 +135,9 @@ class Provider(nightcrawler.Provider):
     def on_play(self, context, url):
         video_streams = self.get_client(context).get_video_streams(url)
         video_stream = self.select_video_stream(context, video_streams, [360, 720])
+        if not video_stream:
+            return False
+
         return {'type': 'uri',
                 'uri': video_stream['uri']}
 
