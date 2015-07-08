@@ -2,7 +2,6 @@
 __author__ = 'bromix'
 
 import json
-import re
 
 from resources.lib.de.golem.client import Client
 from resources.lib.org.bromix import nightcrawler
