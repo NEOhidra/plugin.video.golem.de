@@ -94,29 +94,26 @@ class TestProvider(unittest.TestCase):
         self.assertIsNotNone(result.get('uri', None))
         pass
 
-    # ===================
-
-    def test_on_year2(self):
-        now = datetime.datetime.now()
-        context = nightcrawler.Context(path='/browse/year/%d/' % now.year)
-        result = golem.Provider().navigate(context)
-        self.assertEquals(len(result), now.month)
-        pass
-
     def test_on_search_list(self):
         provider = golem.Provider()
 
-        context = nightcrawler.Context(path='/search/list/')
+        context = nightcrawler.Context(provider.PATH_SEARCH)
+        context.get_search_history().clear()
         result = provider.navigate(context)
-        items = result[0]
+        self.assertEquals(len(result), 1)
         pass
 
     def test_on_search_query(self):
         provider = golem.Provider()
 
-        context = nightcrawler.Context(path='/search/query/', params={'q': 'Lenovo'})
+        context = nightcrawler.Context('/search/query/', {'q': 'trailer', 'limit': '10'})
+        context.get_search_history().clear()
         result = provider.navigate(context)
-        items = result[0]
+        self.assertGreaterEqual(len(result), 1)
+
+        context = nightcrawler.Context(provider.PATH_SEARCH)
+        result = provider.navigate(context)
+        self.assertEquals(len(result), 2)
         pass
 
     pass

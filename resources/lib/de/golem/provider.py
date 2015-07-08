@@ -124,29 +124,18 @@ class Provider(nightcrawler.Provider):
         result = function_cache.get(FunctionCache.ONE_HOUR, get_month_from_video_items, video_items, year)
         return result
 
-    def on_search(self, context, query):
+    @nightcrawler.register_context_value('limit', int)
+    def on_search(self, context, query, limit):
         context.set_content_type(context.CONTENT_TYPE_EPISODES)
-        return self._get_videos(context, query=query)
+        return self._get_videos(context, query=query, count=limit)
 
     # ==================================
 
     @nightcrawler.register_path('/play/')
     @nightcrawler.register_context_value('url', unicode, required=True)
     def _on_play(self, context, url):
-        video_id = re.search(r'(?P<video_id>\d+)', url)
-        if not video_id:
-            raise nightcrawler.NightcrawlerException('Video id not found in url "%s"' % url)
-
-        video_quality = context.get_settings().get_video_quality(['medium', 'high'])
-        client = self.get_client(context)
-        video_url = client.get_video_stream(video_id.group('video_id'), url, quality=video_quality)
-
-        if video_url:
-            return {'type': 'uri',
-                    'uri': video_url}
-
-        context.get_ui().show_notification(context.localize(self.LOCAL_GOLEM_STREAM_NOT_FOUND))
-        return False
+        video_streams = self.get_client(context).get_video_streams(url)
+        return self.select_video_stream(context, video_streams, ['medium', 'high'])
 
     @nightcrawler.register_path('/browse/all/')
     def _on_browse_all(self, context, ):

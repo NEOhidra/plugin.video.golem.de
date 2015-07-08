@@ -46,20 +46,20 @@ class Provider(object):
 
     LOCAL_SETUP_OVERRIDE_VIEW = 30037
 
-    PATH_SEARCH = 'search/list'
-    PATH_SEARCH_QUERY = 'search/query'
-    PATH_SEARCH_INPUT = 'search/input'
-    PATH_SEARCH_CLEAR = 'search/clear'
-    PATH_SEARCH_RENAME = 'search/rename'
-    PATH_SEARCH_REMOVE = 'search/remove'
+    PATH_SEARCH = '/search/list/'
+    PATH_SEARCH_QUERY = '/search/query/'
+    PATH_SEARCH_INPUT = '/search/input/'
+    PATH_SEARCH_CLEAR = '/search/clear/'
+    PATH_SEARCH_RENAME = '/search/rename/'
+    PATH_SEARCH_REMOVE = '/search/remove/'
 
-    PATH_FAVORITES_ADD = 'favorites/add'
-    PATH_FAVORITES_LIST = 'favorites/list'
-    PATH_FAVORITES_REMOVE = 'favorites/remove'
+    PATH_FAVORITES_ADD = '/favorites/add/'
+    PATH_FAVORITES_LIST = '/favorites/list/'
+    PATH_FAVORITES_REMOVE = '/favorites/remove/'
 
-    PATH_WATCH_LATER_ADD = 'watch_later/add'
-    PATH_WATCH_LATER_LIST = 'watch_later/list'
-    PATH_WATCH_LATER_REMOVE = 'watch_later/remove'
+    PATH_WATCH_LATER_ADD = '/watch_later/add/'
+    PATH_WATCH_LATER_LIST = '/watch_later/list/'
+    PATH_WATCH_LATER_REMOVE = '/watch_later/remove/'
 
     def __init__(self):
         pass
