@@ -139,11 +139,7 @@ class AbstractContext(object):
                 import platform
                 python_version = str(platform.python_version())
                 python_version = python_version.split('.')
-                for index, component in enumerate(python_version):
-                    python_version[index] = int(component)
-                    pass
-
-                self._python_version = tuple(python_version)
+                self._python_version = tuple(map(lambda x: int(x), python_version))
             except Exception, ex:
                 self.log_error('Unable to get the version of python')
                 self.log_error(ex.__str__())

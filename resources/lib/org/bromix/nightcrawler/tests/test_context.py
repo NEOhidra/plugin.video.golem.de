@@ -21,6 +21,11 @@ class TestContext(unittest.TestCase):
     def test_get_python_version(self):
         context = nightcrawler.Context()
         py_version = context.get_python_version()
+
+        if (2, 7, 5) < py_version <= (2, 7, 8):
+            x = 0
+            pass
+
         self.assertIsInstance(py_version, tuple)
         pass
 
@@ -53,4 +58,5 @@ class TestContext(unittest.TestCase):
         resource_path = context.create_resource_path('/media/search.png')
         self.assertEquals('\\user\\x\\data\\resources\\media\\search.png', resource_path)
         pass
+
     pass
