@@ -248,9 +248,9 @@ class Provider(object):
 
         return video_items
 
-    @register_path('/search/(?P<method>(remove|rename|query))/')
+    @register_path('/search/(?P<method>(remove|rename))/')
     @register_path_value('method', unicode)
-    @register_context_value('q', unicode, alias='query', default=u'')
+    @register_context_value('q', unicode, alias='query', required=True)
     def _internal_search_with_query(self, context, method, query):
         search_history = context.get_search_history()
         if method == 'remove':
@@ -266,22 +266,12 @@ class Provider(object):
                 pass
             return True
 
-        if method == 'query':
-            result = True
-            if not query:
-                result, query = context.get_ui().on_keyboard_input(context.localize(self.LOCAL_SEARCH_TITLE))
-                pass
-
-            if result and query:
-                search_history.update(query)
-                return self.on_search(context, query)
-            pass
-
         return False
 
-    @register_path('/search/(?P<method>(list|clear))/')
+    @register_path('/search/(?P<method>(list|query|clear))/')
     @register_path_value('method', unicode)
-    def _internal_search_without_query(self, context, method):
+    @register_context_value('q', unicode, alias='query', default=u'')
+    def _internal_search_without_query(self, context, method, query):
         search_history = context.get_search_history()
         if method == 'clear':
             search_history.clear()
@@ -314,6 +304,17 @@ class Provider(object):
                 pass
 
             return result
+
+        if method == 'query':
+            result = True
+            if not query:
+                result, query = context.get_ui().on_keyboard_input(context.localize(self.LOCAL_SEARCH_TITLE))
+                pass
+
+            if result and query:
+                search_history.update(query)
+                return self.on_search(context, query)
+            pass
 
         return False
 
