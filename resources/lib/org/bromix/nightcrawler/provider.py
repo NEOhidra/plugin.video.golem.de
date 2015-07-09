@@ -90,7 +90,15 @@ class Provider(object):
 
         return None
 
-    def select_video_stream(self, context, video_streams, video_quality_index=[360, 720]):
+    def select_video_stream(self, context, video_streams, video_quality_index=[360, 720], video_item=None):
+        """
+        Returns a selected video stream or False if the user aborted
+        :param context: the current context
+        :param video_streams: a list of selectable video streams
+        :param video_item: (optional) video item to update with the uri of the selected video stream
+        :param video_quality_index: index mapping to video quality
+        :return:
+        """
         def _sort_video_streams(_video_stream):
             return _video_stream.get('sort', 0)
 
@@ -109,15 +117,16 @@ class Provider(object):
 
             return _selected_video_stream
 
-        # sort stream, highest values first
+        # sort stream, highest values first based on 'sort' array
         video_streams = sorted(video_streams, key=_sort_video_streams, reverse=True)
 
-        # some debug information
+        # log all possible steams
         context.log_debug('selectable streams: %d' % len(video_streams))
         for video_stream in video_streams:
             context.log_debug('selectable stream: %s' % video_stream)
             pass
 
+        # show a list of selectable streams (if enabled)
         selected_video_stream = None
         if context.get_settings().ask_for_video_quality() and len(video_streams) > 1:
             items = map(lambda x: (x['title'], x), video_streams)
@@ -125,14 +134,28 @@ class Provider(object):
                                                                default=None)
             pass
         else:
+            # fallback - use best fit
             selected_video_stream = _find_best_fit(video_streams)
             pass
 
-        if selected_video_stream is not None:
-            context.log_debug('selected stream: %s' % selected_video_stream)
-            pass
+        if selected_video_stream is None:
+            return False
 
-        return selected_video_stream
+        # log selected video stream
+        context.log_debug('selected stream: %s' % selected_video_stream)
+
+        # we need an uri in the video stream
+        if not 'uri' in selected_video_stream:
+            raise NightcrawlerException('Missing uri in video stream')
+
+        # update the given video item (optional)
+        if video_item:
+            video_item['uri'] = selected_video_stream['uri']
+            return video_item
+
+        # return an uri item
+        return {'type': 'uri',
+                'uri': selected_video_stream['uri']}
 
     def navigate(self, context):
         self._process_addon_setup(context)
