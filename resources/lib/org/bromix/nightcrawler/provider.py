@@ -267,6 +267,7 @@ class Provider(object):
             return True
 
         if method == 'query':
+            result = False
             if not query:
                 result, query = context.get_ui().on_keyboard_input(context.localize(self.LOCAL_SEARCH_TITLE))
                 pass
