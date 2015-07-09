@@ -30,6 +30,9 @@ class Storage(object):
         self._needs_commit = False
         pass
 
+    def get_max_item_count(self):
+        return self._max_item_count
+
     def set_max_item_count(self, max_item_count):
         self._max_item_count = max_item_count
         pass

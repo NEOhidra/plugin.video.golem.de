@@ -41,9 +41,15 @@ def create_search_item(context, thumbnail=None, fanart=None):
     if not fanart:
         fanart = context.get_fanart()
         pass
+
+    uri = context.create_uri('search/list')
+    if context.get_search_history().get_max_item_count() == 0:
+        uri = context.create_uri('search/query')
+        pass
+
     return {'type': 'folder',
             'title': context.localize(30102),
-            'uri': context.create_uri('search/list'),
+            'uri': uri,
             'images': {'thumbnail': thumbnail,
                        'fanart': fanart}}
 

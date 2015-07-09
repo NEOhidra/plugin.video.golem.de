@@ -47,8 +47,8 @@ class Provider(object):
     LOCAL_SETUP_OVERRIDE_VIEW = 30037
 
     PATH_SEARCH = '/search/list/'
+    PATH_SEARCH_LIST = '/search/list/'
     PATH_SEARCH_QUERY = '/search/query/'
-    PATH_SEARCH_INPUT = '/search/input/'
     PATH_SEARCH_CLEAR = '/search/clear/'
     PATH_SEARCH_RENAME = '/search/rename/'
     PATH_SEARCH_REMOVE = '/search/remove/'
@@ -250,7 +250,7 @@ class Provider(object):
 
     @register_path('/search/(?P<method>(remove|rename|query))/')
     @register_path_value('method', unicode)
-    @register_context_value('q', unicode, alias='query', required=True)
+    @register_context_value('q', unicode, alias='query', default=u'')
     def _internal_search_with_query(self, context, method, query):
         search_history = context.get_search_history()
         if method == 'remove':
@@ -267,12 +267,18 @@ class Provider(object):
             return True
 
         if method == 'query':
-            search_history.update(query)
-            return self.on_search(context, query)
+            if not query:
+                result, query = context.get_ui().on_keyboard_input(context.localize(self.LOCAL_SEARCH_TITLE))
+                pass
+
+            if result or query:
+                search_history.update(query)
+                return self.on_search(context, query)
+            pass
 
         return False
 
-    @register_path('/search/(?P<method>(list|input|clear))/')
+    @register_path('/search/(?P<method>(list|clear))/')
     @register_path_value('method', unicode)
     def _internal_search_without_query(self, context, method):
         search_history = context.get_search_history()
@@ -281,30 +287,21 @@ class Provider(object):
             context.get_ui().refresh_container()
             return True
 
-        if method == 'input':
-            result, query = context.get_ui().on_keyboard_input(context.localize(self.LOCAL_SEARCH_TITLE))
-            if result:
-                context.execute(
-                    'Container.Update(%s)' % context.create_uri(self.PATH_SEARCH_QUERY, {'q': query}))
-                pass
-
-            return True
-
         if method == 'list':
             # add new search
             result = [{'type': 'folder',
-                       'title': '[B]%s[/B]' % context.localize(30102),
-                       'uri': context.create_uri(self.PATH_SEARCH_INPUT),
+                       'title': '[B]%s[/B]' % context.localize(self.LOCAL_SEARCH_NEW),
+                       'uri': context.create_uri(self.PATH_SEARCH_QUERY),
                        'images': {'thumbnail': context.create_resource_path('media/new_search.png'),
                                   'fanart': self.get_fanart(context)}}]
 
             for query in search_history.list():
                 # we create a new instance of the SearchItem
-                context_menu = [(context.localize(30108),
+                context_menu = [(context.localize(self.LOCAL_SEARCH_REMOVE),
                                  'RunPlugin(%s)' % context.create_uri(self.PATH_SEARCH_REMOVE, {'q': query})),
-                                (context.localize(30113),
+                                (context.localize(self.LOCAL_SEARCH_RENAME),
                                  'RunPlugin(%s)' % context.create_uri(self.PATH_SEARCH_RENAME, {'q': query})),
-                                (context.localize(30120),
+                                (context.localize(self.LOCAL_SEARCH_CLEAR),
                                  'RunPlugin(%s)' % context.create_uri(self.PATH_SEARCH_CLEAR))]
                 item = {'type': 'folder',
                         'title': query,
@@ -313,10 +310,6 @@ class Provider(object):
                                    'fanart': self.get_fanart(context)},
                         'context-menu': {'items': context_menu}}
                 result.append(item)
-                pass
-
-            if search_history.is_empty():
-                context.execute('RunPlugin(%s)' % context.create_uri(self.PATH_SEARCH_INPUT))
                 pass
 
             return result
