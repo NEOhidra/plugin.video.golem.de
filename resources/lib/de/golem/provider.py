@@ -128,8 +128,6 @@ class Provider(nightcrawler.Provider):
         context.set_content_type(context.CONTENT_TYPE_EPISODES)
         return self._get_videos(context, query=query, count=limit)
 
-    # ==================================
-
     @nightcrawler.register_path('/play/')
     @nightcrawler.register_context_value('url', unicode, required=True)
     def on_play(self, context, url):
