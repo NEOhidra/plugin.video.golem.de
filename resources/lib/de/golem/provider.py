@@ -221,6 +221,12 @@ class Provider(nightcrawler.Provider):
                                                        self.get_client(context).get_videos)
         return filter_video_items(self, context, video_items, count=50)
 
+    @nightcrawler.register_path('/watch_later/list/')
+    def on_watch_later(self, context):
+        context.set_content_type(context.CONTENT_TYPE_EPISODES)
+        context.add_sort_method(context.SORT_METHOD_DATE_ADDED)
+        return super(Provider, self).on_watch_later(context)
+
     @nightcrawler.register_path('/')
     def on_root(self, context):
         result = []

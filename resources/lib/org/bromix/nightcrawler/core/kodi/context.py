@@ -19,7 +19,6 @@ from .player import KodiPlayer
 from .playlist import KodiPlaylist
 
 
-
 class KodiContext(AbstractContext):
     def __init__(self, path='/', params=None, plugin_name=u'', plugin_id=u'', override=True):
         AbstractContext.__init__(self, path, params, plugin_name, plugin_id)
@@ -242,8 +241,49 @@ class KodiContext(AbstractContext):
         pass
 
     def add_sort_method(self, *sort_methods):
+        sort_map = {'album': 13,
+                    'album_ignore_the': 14,
+                    'artist': 11,
+                    'artist_ignore_the': 12,
+                    'bit_rate': 39,
+                    'channel': 38,
+                    'country': 16,
+                    'date': 3,
+                    'date_added': 19,
+                    'date_taken': 40,
+                    'drive_type': 6,
+                    'duration': 8,
+                    'episode': 22,
+                    'file': 5,
+                    'full_path': 32,
+                    'genre': 15,
+                    'label': 1,
+                    'label_ignore_folders': 33,
+                    'label_ignore_the': 2,
+                    'last_played': 34,
+                    'listeners': 36,
+                    'mpaa_rating': 28,
+                    'none': 0,
+                    'play_count': 35,
+                    'playlist_order': 21,
+                    'production_code': 26,
+                    'program_count': 20,
+                    'size': 4,
+                    'song_rating': 27,
+                    'studio': 30,
+                    'studio_ignore_the': 31,
+                    'title': 9,
+                    'title_ignore_the': 10,
+                    'track_number': 7,
+                    'unsorted': 37,
+                    'video_rating': 18,
+                    'video_runtime': 29,
+                    'video_sort_title': 24,
+                    'video_sort_title_ignore_the': 25,
+                    'video_title': 23,
+                    'video_year': 17}
         for sort_method in sort_methods:
-            xbmcplugin.addSortMethod(self._plugin_handle, sort_method)
+            xbmcplugin.addSortMethod(self._plugin_handle, sort_map.get(sort_method, 0))
             pass
         pass
 

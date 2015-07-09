@@ -236,7 +236,7 @@ class Provider(object):
         return False
 
     @register_path('/watch_later/list/')
-    def _internal_watch_later_list(self, context):
+    def on_watch_later(self, context):
         video_items = context.get_watch_later_list().list()
 
         for video_item in video_items:
