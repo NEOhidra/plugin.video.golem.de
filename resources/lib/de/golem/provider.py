@@ -5,7 +5,6 @@ import json
 
 from resources.lib.de.golem.client import Client
 from resources.lib.org.bromix import nightcrawler
-from resources.lib.org.bromix.nightcrawler.storage import FunctionCache
 
 
 def filter_video_items(provider, context, video_items, query=None, year=None, month=None, count=None):
