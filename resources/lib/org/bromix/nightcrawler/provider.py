@@ -196,8 +196,6 @@ class Provider(object):
     @register_path_value('method', unicode)
     @register_context_value('item', dict, required=True)
     def _internal_favorites_with_item(self, context, method, item):
-        # context.add_sort_method(constants.sort_method.LABEL_IGNORE_THE)
-
         if method == 'add':
             context.get_favorite_list().add(item)
             return True
@@ -210,9 +208,7 @@ class Provider(object):
         return False
 
     @register_path('/favorites/list/')
-    def _internal_favorites_list(self, context):
-        # context.add_sort_method(constants.sort_method.LABEL_IGNORE_THE)
-
+    def on_favorites_list(self, context):
         result = context.get_favorite_list().list()
         for directory_item in result:
             context_menu = [(context.localize(self.LOCAL_WATCH_LATER_REMOVE),
