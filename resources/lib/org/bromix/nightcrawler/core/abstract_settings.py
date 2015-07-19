@@ -80,7 +80,10 @@ class AbstractSettings(object):
     def get_items_per_page(self):
         return self.get_int(self.ADDON_ITEMS_PER_PAGE, 50, lambda x: (x + 1) * 5)
 
-    def get_video_quality(self, video_quality_index=[240, 360, 480, 720, 1080, 2160, 4320]):
+    def get_video_quality(self, video_quality_index=None):
+        if not video_quality_index:
+            video_quality_index = [240, 360, 480, 720, 1080, 2160, 4320]
+            pass
         return self.get_int(self.VIDEO_QUALITY, video_quality_index[0], converter=lambda x: video_quality_index[x])
 
     def ask_for_video_quality(self):

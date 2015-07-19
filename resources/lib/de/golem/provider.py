@@ -90,7 +90,7 @@ class Provider(nightcrawler.Provider):
         self._client = None
         pass
 
-    def on_setup(self, mode):
+    def on_setup(self, context, mode):
         if mode == 'content-type':
             return ['default', 'episodes']
 

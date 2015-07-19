@@ -93,7 +93,7 @@ class Provider(object):
 
         return None
 
-    def select_video_stream(self, context, video_streams, video_quality_index=[360, 720], video_item=None):
+    def select_video_stream(self, context, video_streams, video_quality_index=None, video_item=None):
         """
         Returns a selected video stream or False if the user aborted
         :param context: the current context
@@ -102,6 +102,10 @@ class Provider(object):
         :param video_quality_index: index mapping to video quality
         :return:
         """
+        if not video_quality_index:
+            video_quality_index = [360, 720]
+            pass
+
         def _sort_video_streams(_video_stream):
             return _video_stream.get('sort', 0)
 
