@@ -29,18 +29,18 @@ class TestProvider(unittest.TestCase):
 
     def test_on_week_in_review(self):
         # test years
-        context = nightcrawler.Context(path='/browse/by-query/', params={'q': 'wochenrueckblick'})
+        context = nightcrawler.Context(path='/browse/query/', params={'q': 'wochenrueckblick'})
         result = golem.Provider().navigate(context)
         self.assertGreaterEqual(len(result), 1)
 
         # test month
         now = datetime.datetime.now()-datetime.timedelta(30)
-        context = nightcrawler.Context(path='/browse/by-query/%d/' % now.year, params={'q': 'wochenrueckblick'})
+        context = nightcrawler.Context(path='/browse/query/%d/' % now.year, params={'q': 'wochenrueckblick'})
         result = golem.Provider().navigate(context)
         self.assertGreaterEqual(len(result), 1)
 
         # test end result
-        context = nightcrawler.Context(path='/browse/by-query/%d/%d/' % (now.year, now.month),
+        context = nightcrawler.Context(path='/browse/query/%d/%d/' % (now.year, now.month),
                                        params={'q': 'wochenrueckblick'})
         result = golem.Provider().navigate(context)
         self.assertGreaterEqual(len(result), 1)
@@ -48,7 +48,7 @@ class TestProvider(unittest.TestCase):
 
     def test_on_manufacturer_videos(self):
         now = datetime.datetime.now()-datetime.timedelta(30)
-        context = nightcrawler.Context(path='/browse/by-query/%d/%d/' % (now.year, now.month),
+        context = nightcrawler.Context(path='/browse/query/%d/%d/' % (now.year, now.month),
                                        params={'q': 'herstellervideo'})
         result = golem.Provider().navigate(context)
         self.assertGreaterEqual(len(result), 1)
@@ -56,7 +56,7 @@ class TestProvider(unittest.TestCase):
 
     def test_on_trailer(self):
         now = datetime.datetime.now()-datetime.timedelta(30)
-        context = nightcrawler.Context(path='/browse/by-query/%d/%d/' % (now.year, now.month),
+        context = nightcrawler.Context(path='/browse/query/%d/%d/' % (now.year, now.month),
                                        params={'q': 'trailer'})
         result = golem.Provider().navigate(context)
         self.assertGreaterEqual(len(result), 1)
@@ -73,7 +73,7 @@ class TestProvider(unittest.TestCase):
         now = datetime.datetime.now()
         context = nightcrawler.Context(path='/browse/date/%d/%d/' % (now.year, now.month))
         result = golem.Provider().navigate(context)
-        self.assertEquals(len(result), 1)
+        self.assertGreater(len(result), 0)
         pass
 
     def test_on_browse_all(self):

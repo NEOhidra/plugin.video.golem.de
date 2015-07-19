@@ -3,7 +3,7 @@ __author__ = 'bromix'
 import xbmcgui
 import xbmcplugin
 
-from ...exception import NightcrawlerException
+from ...exception import ProviderException
 from ... import utils
 
 
@@ -17,12 +17,35 @@ def _do_info_labels(context, kodi_item, item):
     info_labels = {}
     item_type = item['type']
 
-    if item_type in ['video', 'movie']:
+    if item_type in ['audio', 'music']:
+        # 'title' = 'Blow Your Head Off' (string)
+        _process_not_none_value(info_labels, 'title', item['title'])
+
+        # 'tracknumber' = 12 (int)
+        _process_not_none_value(info_labels, 'tracknumber', item.get('tracknumber', None))
+
+        # 'year' = 1994 (int)
+        _process_not_none_value(info_labels, 'year', item.get('year', None))
+
+        # 'genre' = 'Hardcore' (string)
+        _process_not_none_value(info_labels, 'genre', item.get('genre', None))
+
+        # 'duration' = 79 (int)
+        _process_not_none_value(info_labels, 'duration', item.get('duration', None))
+
+        # 'album' = 'Buckle Up' (string)
+        _process_not_none_value(info_labels, 'album', item.get('album', None))
+
+        # 'artist' = 'Angerfist' (string)
+        _process_not_none_value(info_labels, 'artist', item.get('artist', None))
+
+        if info_labels:
+            kodi_item.setInfo(type=u'music', infoLabels=info_labels)
+            pass
+        pass
+    elif item_type in ['video', 'movie']:
         # 'plot' = '...' (string)
         _process_not_none_value(info_labels, 'plot', item.get('plot', None))
-
-        # 'artist' = [] (list)
-        #_process_not_none_value(info_labels, 'artist', item.get('artist', None))
 
         # studio
         _process_not_none_value(info_labels, 'studio', item.get('studio', None))
@@ -64,7 +87,7 @@ def _do_info_labels(context, kodi_item, item):
             pass
 
         # 'rating' = 4.5 (float)
-        #_process_video_rating(info_labels, base_item.get_rating())
+        # _process_video_rating(info_labels, base_item.get_rating())
 
         # 'director' = 'Steven Spielberg' (string)
         #_process_string_value(info_labels, 'director', base_item.get_director())
@@ -94,24 +117,20 @@ def _do_fanart(context, kodi_item, item):
     pass
 
 
-def _create_kodi_item(context, item):
+def create_kodi_item(context, item):
     icon_image_map = {'folder': u'DefaultFolder.png',
-                       'video': u'DefaultVideo.png',
-                       'movie': u'DefaultVideo.png',
-                       'audio': u'DefaultAudio.png',
-                       'music': u'DefaultAudio.png',
-                       'image': u'DefaultFile.png',
-                       'uri': u''}
+                      'video': u'DefaultVideo.png',
+                      'movie': u'DefaultVideo.png',
+                      'audio': u'DefaultAudio.png',
+                      'music': u'DefaultAudio.png',
+                      'image': u'DefaultFile.png',
+                      'uri': u''}
 
     item_type = item['type']
-    if item_type == 'uri':
-        kodi_item = xbmcgui.ListItem(path=item['uri'])
-        pass
-    else:
-        kodi_item = xbmcgui.ListItem(label=item.get('title', item['uri']),
-                                      iconImage=icon_image_map.get(item_type, u''),
-                                      thumbnailImage=item.get('images', {}).get('thumbnail', u''))
-        pass
+    kodi_item = xbmcgui.ListItem(label=item.get('title', item['uri']),
+                                 path=item['uri'],
+                                 iconImage=icon_image_map.get(item_type, u''),
+                                 thumbnailImage=item.get('images', {}).get('thumbnail', u''))
 
     # set playable
     if item_type in ['video', 'movie', 'audio', 'music', 'uri']:
@@ -123,42 +142,22 @@ def _create_kodi_item(context, item):
         kodi_item.addStreamInfo('video', {'duration': '%d' % item['duration']})
         pass
 
-    return kodi_item
-
-
-def process_item(context, item):
-    kodi_item = _create_kodi_item(context, item)
     _do_fanart(context, kodi_item, item)
     _do_context_menu(context, kodi_item, item)
     _do_info_labels(context, kodi_item, item)
 
-    if item['type'] == 'uri':
+    return kodi_item
+
+
+def process_item(context, item, resolve=False):
+    kodi_item = create_kodi_item(context, item)
+
+    if item['type'] == 'uri' or resolve:
         xbmcplugin.setResolvedUrl(context.get_handle(), succeeded=True, listitem=kodi_item)
         pass
     else:
         if not xbmcplugin.addDirectoryItem(handle=context.get_handle(), url=item['uri'], listitem=kodi_item,
                                            isFolder=item['type'] == 'folder'):
-            raise NightcrawlerException('Failed to add folder item')
+            raise ProviderException('Failed to add folder item')
         pass
     pass
-
-
-def to_audio_item(context, audio_item):
-    context.log_debug('Converting AudioItem')
-    item = xbmcgui.ListItem(label=audio_item.get_name(),
-                            iconImage=u'DefaultAudio.png',
-                            thumbnailImage=audio_item.get_image())
-
-    # only set fanart is enabled
-    settings = context.get_settings()
-    if audio_item.get_fanart() and settings.show_fanart():
-        item.setProperty(u'fanart_image', audio_item.get_fanart())
-        pass
-    if audio_item.get_context_menu() is not None:
-        item.addContextMenuItems(audio_item.get_context_menu(), replaceItems=audio_item.replace_context_menu())
-        pass
-
-    item.setProperty(u'IsPlayable', u'true')
-
-    item.setInfo(type=u'music', infoLabels=info_labels.create_from_item(context, audio_item))
-    return item

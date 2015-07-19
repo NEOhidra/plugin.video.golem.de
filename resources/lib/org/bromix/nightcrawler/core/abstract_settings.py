@@ -28,7 +28,7 @@ class AbstractSettings(object):
     LOGIN_USERNAME = 'login.username'
     LOGIN_PASSWORD = 'login.password'
     LOGIN_ACCESS_TOKEN = 'login.access_token'
-    LOGIN_ACCESS_TOKEN_EXPIRES = 'login.access_token.expires'
+    LOGIN_ACCESS_TOKEN_EXPIRES = 'login.expires_in'
     LOGIN_REFRESH_TOKEN = 'login.refresh_token'
     LOGIN_HASH = 'login.hash'
 
@@ -40,9 +40,6 @@ class AbstractSettings(object):
         raise NotImplementedError()
 
     def set_string(self, setting_id, value):
-        raise NotImplementedError()
-
-    def open_settings(self):
         raise NotImplementedError()
 
     def get_int(self, setting_id, default_value, converter=None):
@@ -57,7 +54,7 @@ class AbstractSettings(object):
         if not isinstance(default_value, int):
             return -1
 
-        return converter(int(default_value))
+        return int(default_value)
 
     def set_int(self, setting_id, value):
         self.set_string(setting_id, str(value))
@@ -84,7 +81,7 @@ class AbstractSettings(object):
         return self.get_int(self.ADDON_ITEMS_PER_PAGE, 50, lambda x: (x + 1) * 5)
 
     def get_video_quality(self, video_quality_index=[240, 360, 480, 720, 1080, 2160, 4320]):
-        return self.get_int(self.VIDEO_QUALITY, 0, converter=lambda x: video_quality_index[x])
+        return self.get_int(self.VIDEO_QUALITY, video_quality_index[0], converter=lambda x: video_quality_index[x])
 
     def ask_for_video_quality(self):
         return self.get_bool(self.VIDEO_QUALITY_ASK, False)
