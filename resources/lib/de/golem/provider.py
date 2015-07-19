@@ -107,20 +107,17 @@ class Provider(nightcrawler.Provider):
         return context.create_resource_path('media/fanart.jpg')
 
     def _get_videos(self, context, query=None, year=None, month=None, count=None):
-        function_cache = context.get_function_cache()
-        video_items = function_cache.get(FunctionCache.ONE_MINUTE * 30, self.get_client(context).get_videos)
+        video_items = context.cache_function(context.CACHE_ONE_MINUTE * 30, self.get_client(context).get_videos)
         return filter_video_items(self, context, video_items, query, year, month, count)
 
     def _get_years(self, context):
-        function_cache = context.get_function_cache()
-        video_items = function_cache.get(FunctionCache.ONE_MINUTE * 30, self.get_client(context).get_videos)
-        result = function_cache.get(FunctionCache.ONE_HOUR, get_years_from_video_items, video_items)
+        video_items = context.cache_function(context.CACHE_ONE_MINUTE * 30, self.get_client(context).get_videos)
+        result = context.cache_function(context.CACHE_ONE_HOUR, get_years_from_video_items, video_items)
         return result
 
     def _get_months(self, context, year):
-        function_cache = context.get_function_cache()
-        video_items = function_cache.get(FunctionCache.ONE_MINUTE * 30, self.get_client(context).get_videos)
-        result = function_cache.get(FunctionCache.ONE_HOUR, get_month_from_video_items, video_items, year)
+        video_items = context.cache_function(context.CACHE_ONE_MINUTE * 30, self.get_client(context).get_videos)
+        result = context.cache_function(context.CACHE_ONE_HOUR, get_month_from_video_items, video_items, year)
         return result
 
     @nightcrawler.register_context_value('limit', int)
@@ -178,8 +175,7 @@ class Provider(nightcrawler.Provider):
     @nightcrawler.register_path_value('year', int)
     @nightcrawler.register_context_value('q', unicode, alias='query', required=True)
     def on_browse_by_query_year(self, context, query, year):
-        video_items = context.get_function_cache().get(FunctionCache.ONE_MINUTE * 30,
-                                                       self.get_client(context).get_videos)
+        video_items = context.cache_function(context.CACHE_ONE_MINUTE * 30, self.get_client(context).get_videos)
         months = get_month_from_video_items(video_items, year)
         result = []
         for month in months:
@@ -215,8 +211,7 @@ class Provider(nightcrawler.Provider):
     def on_browse_newest(self, context):
         context.set_content_type(context.CONTENT_TYPE_EPISODES)
 
-        video_items = context.get_function_cache().get(FunctionCache.ONE_MINUTE * 30,
-                                                       self.get_client(context).get_videos)
+        video_items = context.cache_function(context.CACHE_ONE_MINUTE * 30, self.get_client(context).get_videos)
         return filter_video_items(self, context, video_items, count=50)
 
     @nightcrawler.register_path('/watch_later/list/')
