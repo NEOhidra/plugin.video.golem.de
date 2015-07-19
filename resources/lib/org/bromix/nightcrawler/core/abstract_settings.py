@@ -8,6 +8,7 @@ import re
 class AbstractSettings(object):
     # addon
     ADDON_SETUP = 'addon.setup'  # (bool)
+    ADDON_CACHE_CLEAR = 'addon.cache.clear'  # (bool)
     ADDON_CACHE_SIZE = 'addon.cache.size'  # (int)
     ADDON_SHOW_FANART = 'addon.fanart.show'  # (bool)
     ADDON_SEARCH_SIZE = 'addon.search.size'  # (int)
@@ -103,5 +104,11 @@ class AbstractSettings(object):
 
     def is_support_alternative_player_enabled(self):
         return self.get_bool(self.SUPPORT_ALTERNATIVE_PLAYER, False)
+
+    def is_clear_cache_enabled(self):
+        return self.get_bool(self.ADDON_CACHE_CLEAR, False)
+
+    def disable_clear_cache(self):
+        self.set_bool(self.ADDON_CACHE_CLEAR, False)
 
     pass
