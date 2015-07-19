@@ -1,7 +1,6 @@
-import re
-
 __author__ = 'bromix'
 
+import re
 from io import BytesIO
 import xml.etree.ElementTree as ET
 
