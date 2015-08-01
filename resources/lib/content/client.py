@@ -5,7 +5,7 @@ from io import BytesIO
 import xml.etree.ElementTree as ET
 
 # nightcrawler
-from resources.lib.org.bromix import nightcrawler
+from resources.lib import nightcrawler
 
 
 class Client(nightcrawler.HttpClient):

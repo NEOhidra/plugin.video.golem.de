@@ -3,8 +3,8 @@ __author__ = 'bromix'
 
 import json
 
-from resources.lib.de.golem.client import Client
-from resources.lib.org.bromix import nightcrawler
+from resources.lib.content.client import Client
+from resources.lib import nightcrawler
 
 
 def filter_video_items(provider, context, video_items, query=None, year=None, month=None, count=None):

@@ -4,17 +4,17 @@ __author__ = 'bromix'
 
 import unittest
 
-from resources.lib.de import golem
+from resources.lib.content.client import Client
 
 
 class TestClient(unittest.TestCase):
     def test_get_videos(self):
-        client = golem.Client()
+        client = Client()
         videos = client.get_videos()
         pass
 
     def test_get_stream(self):
-        client = golem.Client()
+        client = Client()
         videos = client.get_videos(limit=10)
         self.assertGreater(len(videos['items']), 0)
 
@@ -24,7 +24,7 @@ class TestClient(unittest.TestCase):
         pass
 
     def test_get_streams(self):
-        client = golem.Client()
+        client = Client()
         videos = client.get_videos(limit=10)
         self.assertGreater(len(videos['items']), 0)
 
