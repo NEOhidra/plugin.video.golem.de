@@ -1,5 +1,3 @@
-import re
-
 __author__ = 'bromix'
 
 import unittest
